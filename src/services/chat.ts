@@ -3,27 +3,40 @@ import OpenAi from "openai";
 
 const openAi = new OpenAi();
 
-export async function getChatResponse(userMessage: string) {
+interface ChatMessage {
+  role: string;
+  content: string | null;
+}
 
-  const response = openAi.chat.completions.create({
+async function newMessage(history: any[], message: any): Promise<ChatMessage> {
+  const response = await openAi.chat.completions.create({
     model: "gpt-3.5-turbo",
-    temperature: 0,
     messages: [
       {
         role: "system",
-        content: `
-          You are an HR assistant. You are helping a tech human resource professional to hire candidates.
-          Your name is Harry.
-          If the user say hello, you should respond with a greeting.
-        `,
+        content: "You are an HR assistant. You are helping a tech human resource professional to hire candidates.",
       },
-      {
-        role: "user",
-        content: userMessage
-      }
+      ...history,
+      message
     ],
-  })
+  });
 
-  console.log(response);
-  return response;
+  return response.choices[0].message ;
+}
+
+let chatHistory: ChatMessage[] = []
+
+export async function getChatResponse(userMessage: string): Promise<ChatMessage[]> {
+
+  if(userMessage === "reset") {
+    chatHistory = [];
+    return chatHistory;
+  }
+
+  const formattedMessage = { role: "user", content: userMessage }
+  const chatResponse = await newMessage(chatHistory, formattedMessage)
+
+  chatHistory.push(formattedMessage, chatResponse)
+
+  return chatHistory;
 }
