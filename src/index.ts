@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/chat', async (req, res) => {
-    const results = await getChatResponse('Hello');
+    const results = await getChatResponse('What is python language?');
     res.send(results);
 })
 
