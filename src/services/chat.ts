@@ -24,7 +24,7 @@ async function newMessage(history: any[], message: any): Promise<ChatMessage> {
   return response.choices[0].message ;
 }
 
-let chatHistory: ChatMessage[] = []
+  let chatHistory: ChatMessage[] = []
 
 export async function getChatResponse(userMessage: string): Promise<ChatMessage[]> {
 

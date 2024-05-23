@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import {getChatResponse} from './services/chat';
+import {serach} from './services/search';
 
 const app =  express();
 
@@ -15,6 +16,15 @@ app.get('/', (req, res) => {
 app.post('/chat', async (req, res) => {
     const message = req.body.message;
     const response = await getChatResponse(message);
+    res.send(response);
+});
+
+app.post('/search', async (req, res) => {
+    const query = req.body.query;
+
+    if (!query) return res.status(200);
+
+    const response = await serach(query);
     res.send(response);
 });
 
